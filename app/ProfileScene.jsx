@@ -8,6 +8,7 @@ export default function ProfileScene() {
   const [name, setName] = useState("Muhib Al Hasan");
   const [uni, setUni] = useState("United International University");
   const [age, setAge] = useState(23);
+  const [firstLaunch, setFirstLaunch] = useState(true);
   let id = 1;
 
   const db = SQLite.openDatabase("NewUserProfileDB.db");
@@ -39,7 +40,7 @@ export default function ProfileScene() {
       tx.executeSql(
         `UPDATE userProfileTable
           SET name = ?,
-              uni = ?,
+              university = ?,
               age = ?
          WHERE id = ?
         `,
@@ -58,9 +59,12 @@ export default function ProfileScene() {
           console.log(results);
           let len = results.rows.length;
           if (len > 0) {
-            setName(results.rows.item(0).name);
-            setUni(results.rows.item(0).university);
-            setAge(results.rows.item(0).age);
+            if (firstLaunch) {
+              setName(results.rows.item(0).name);
+              setUni(results.rows.item(0).university);
+              setAge(results.rows.item(0).age);
+              setFirstLaunch(false);
+            }
             return true;
           } else {
             return false;
@@ -79,7 +83,6 @@ export default function ProfileScene() {
     if (getUser() == undefined) {
       addUser();
     }
-    console.log(getUser());
   });
 
   return (
